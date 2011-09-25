@@ -7,6 +7,44 @@ import ui
 
 reload(ui)
 
+##########################################################################
+### UI Creature ###
+win = ui.Window('PangoClohtToolsWindow')
+mainLyt_clm = ui.ColumnLayout('mainLyt_clm')
+
+orig_txtFld = ui.TextFieldButtonGrp('orig_txtFld')
+dummyMsh_bttn = ui.Button('dummyMsh_bttn')
+fin_bttn = ui.Button('fin_bttn')
+swtMsh_bttn = ui.Button('swtMsh_bttn')
+
+mainLyt_clm.upStep()
+
+### UI Edit ###
+# window #
+win.title = 'Pango Cloth Tools     \(>///<)/'
+win.w = 200
+win.h = 150
+
+# layout #
+orig_txtFld.bl = '   Get Original Mesh   '
+orig_txtFld.label = 'Original Mesh : '
+orig_txtFld.text = 'SelectOriginalMesh'
+
+mainLyt_clm.adjustableColumn(1)
+
+# control #
+# button set interface #
+bttn_height = 35
+
+dummyMsh_bttn.label = 'Dummy Mesh'
+fin_bttn.label = 'Finalize'
+swtMsh_bttn.label = 'Switch Mesh'
+
+dummyMsh_bttn.h = bttn_height
+fin_bttn.h = bttn_height
+swtMsh_bttn.h = bttn_height
+
+##########################################################################
 ### mesh object ###
 class Mesh(object) :
     '''
@@ -80,90 +118,50 @@ class FixMesh(Mesh) :
         self.name = name
 
 ##########################################################################
-curFrm = int(mc.currentTime(q = True))        # get current frame
-selOrig = 'pPlane2'
-origMsh = OrigMesh(selOrig)
-    
-def setInputFixShape(*args) : 
-    fixMsh_tmp = mc.duplicate(origMsh.n)[0]
-    fixMsh = FixMesh(fixMsh_tmp)
-    fixMsh.n = '%s_%sx' % (origMsh.n, curFrm)
+def setInputFixShape(*args) :
+	curFrm = int(mc.currentTime(q = True)) 
+	
+	origMsh = OrigMesh(orig_txtFld.text)
+	fixMsh_tmp = mc.duplicate(origMsh.n)[0]
+	fixMsh = FixMesh(fixMsh_tmp)
+	fixMsh.n = '%s_%sx' % (origMsh.n, curFrm)
                    
-    curBsh = mc.blendShape(fixMsh.n, origMsh.n, n = '%s_BSH' % fixMsh, origin = 'world')[0]
-    mc.setKeyframe('%s.%s' % (curBsh, fixMsh.n), t = curFrm, v = 1)
-    mc.setKeyframe('%s.%s' % (curBsh, fixMsh.n), t = curFrm - 1, v = 0)
-    mc.setKeyframe('%s.%s' % (curBsh, fixMsh.n), t = curFrm + 1, v = 0)
+	curBsh = mc.blendShape(fixMsh.n, origMsh.n, n = '%s_BSH' % fixMsh, origin = 'world')[0]
+	mc.setKeyframe('%s.%s' % (curBsh, fixMsh.n), t = curFrm, v = 1)
+	mc.setKeyframe('%s.%s' % (curBsh, fixMsh.n), t = curFrm - 1, v = 0)
+	mc.setKeyframe('%s.%s' % (curBsh, fixMsh.n), t = curFrm + 1, v = 0)
     
-    origMsh.vis = 0
-    fixMsh.vis = 1
-    
-def finalizeFunction() :
-    fixMsh = FixMesh('%s_%sx' % (origMsh.n, curFrm))
-    origMsh.vis = 1
-    fixMsh.vis = 0
+	origMsh.vis = 0
+	fixMsh.vis = 1
+		    
+def finalizeFunction(*args) :
+	curFrm = int(mc.currentTime(q = True))
+	
+	origMsh = OrigMesh(orig_txtFld.text)
+	fixMsh = FixMesh('%s_%sx' % (origMsh.n, curFrm))
+	origMsh.vis = 1
+	fixMsh.vis = 0
     
 def switchEditShape(origVis = 1) :
-    fixMsh = FixMesh('%s_%sx' % (origMsh.n, curFrm))
-    
-    if origMsh.vis == 1 :
-        origMsh.vis = 0
-        fixMsh.vis = 1
-        
-    else :
-        origMsh.vis = 1
-        fixMsh.vis = 0
-
-def testA(*args) :
-	print 'test test test test test test'
+	curFrm = int(mc.currentTime(q = True))
 	
-def aA(*args) :
-	print 'AAAAAAAAAAAA'
+	origMsh = OrigMesh(orig_txtFld.text)
+	fixMsh = FixMesh('%s_%sx' % (origMsh.n, curFrm))
     
+	if origMsh.vis == 1 :
+		origMsh.vis = 0
+		fixMsh.vis = 1
+        
+	else :
+		origMsh.vis = 1
+		fixMsh.vis = 0
+
+def getOriginalMesh(*args) :
+	orig_txtFld.text = mc.ls(sl = True)[0]
     
-#setInputFixShape()
-#finalizeFunction()
-#switchEditShape()
-
-##########################################################################
-### UI Creature ###
-win = ui.Window('PangoClohtToolsWindow')
-mainLyt_clm = ui.ColumnLayout('mainLyt_clm')
-
-orig_txtFld = ui.TextFieldButtonGrp('orig_txtFld')
-dummyMsh_bttn = ui.Button('dummyMsh_bttn')
-fin_bttn = ui.Button('fin_bttn')
-swtMsh_bttn = ui.Button('swtMsh_bttn')
-
-mainLyt_clm.upStep()
-
-### UI Edit ###
-# window #
-win.title = 'Pango Cloth Tools     \(>///<)/'
-win.w = 200
-win.h = 150
-
-# layout #
-orig_txtFld.bl = '   Get Original Mesh   '
-orig_txtFld.label = 'Original Mesh : '
-orig_txtFld.text = 'SelectOriginalMesh'
-
-mainLyt_clm.adjustableColumn(1)
-
-# control #
-# button set interface #
-bttn_height = 35
-
-dummyMsh_bttn.label = 'Dummy Mesh'
-fin_bttn.label = 'Finalize'
-swtMsh_bttn.label = 'Switch Mesh'
-
-dummyMsh_bttn.h = bttn_height
-fin_bttn.h = bttn_height
-swtMsh_bttn.h = bttn_height
-
 # button set command #
-
-orig_txtFld.bc = testA
-dummyMsh_bttn.c = aA
-
+orig_txtFld.bc = getOriginalMesh
+dummyMsh_bttn.c = setInputFixShape
+fin_bttn.c = finalizeFunction
+swtMsh_bttn.c = switchEditShape
 
