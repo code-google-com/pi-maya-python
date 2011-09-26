@@ -16,33 +16,32 @@ orig_txtFld = ui.TextFieldButtonGrp('orig_txtFld')
 dummyMsh_bttn = ui.Button('dummyMsh_bttn')
 fin_bttn = ui.Button('fin_bttn')
 swtMsh_bttn = ui.Button('swtMsh_bttn')
+gphEdt_bttn = ui.Button('gphEdt_bttn')
 
 mainLyt_clm.upStep()
 
 ### UI Edit ###
-# window #
 win.title = 'Pango Cloth Tools     \(>///<)/'
 win.w = 200
-win.h = 150
+win.h = 180
 
-# layout #
 orig_txtFld.bl = '   Get Original Mesh   '
 orig_txtFld.label = 'Original Mesh : '
 orig_txtFld.text = 'SelectOriginalMesh'
 
 mainLyt_clm.adjustableColumn(1)
 
-# control #
-# button set interface #
 bttn_height = 35
 
 dummyMsh_bttn.label = 'Dummy Mesh'
 fin_bttn.label = 'Finalize'
 swtMsh_bttn.label = 'Switch Mesh'
+gphEdt_bttn.label = 'Graph Editor'
 
 dummyMsh_bttn.h = bttn_height
 fin_bttn.h = bttn_height
 swtMsh_bttn.h = bttn_height
+gphEdt_bttn.h = bttn_height
 
 ##########################################################################
 ### mesh object ###
@@ -158,10 +157,14 @@ def switchEditShape(origVis = 1) :
 
 def getOriginalMesh(*args) :
 	orig_txtFld.text = mc.ls(sl = True)[0]
+	
+def graphEditorPanel(*args) :
+	mm.eval('tearOffPanel "Graph Editor" graphEditor true;')
     
 # button set command #
 orig_txtFld.bc = getOriginalMesh
 dummyMsh_bttn.c = setInputFixShape
 fin_bttn.c = finalizeFunction
 swtMsh_bttn.c = switchEditShape
+gphEdt_bttn.c = graphEditorPanel
 
