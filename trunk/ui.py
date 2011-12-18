@@ -179,6 +179,12 @@ class FormLayout(Layout) :
    
 	def setPosition(self, control = '', position = 'top', distance = 1) :
 		mc.formLayout(self.name, e = True, attachForm = [(control, position, distance)])
+		
+class TabLayout(Layout) :
+	def __init__(self, name = 'tabLayoutName', type = 'tabLayout') :
+		self.name = name
+		seft.type = type
+		mc.tabLayout(self.name)
        
 ##### control ######
 ####################
