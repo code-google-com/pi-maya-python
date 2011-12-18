@@ -183,7 +183,10 @@ class FormLayout(Layout) :
 class TabLayout(Layout) :
 	def __init__(self, name = 'tabLayoutName', type = 'tabLayout') :
 		self.name = name
-		seft.type = type
+		self.type = type
+		mc.tabLayout(self.name)
+		
+	def setTabLabel(self, *args, **kwargs) :
 		mc.tabLayout(self.name)
        
 ##### control ######
